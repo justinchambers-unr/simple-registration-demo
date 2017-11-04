@@ -4,10 +4,26 @@ html {
     font-family: "Roboto", "sans-serif";
 }
 
-fieldset {
+body, fieldset {
     display: flex;
     flex-flow: column;
-    max-width: 360px;
-    max-height: 480px;
+}
+
+fieldset {
+    width: 360px;
+    height: 440px;
     margin: 0 auto;
+    border-radius: 8px;
+    border: transparent;
+    background-color: rgba(72, 95, 110, 0.8);
+}
+
+legend {
+    font-size: 1.25em;
+}
+
+button {
+    width: 360px;
+    height: 36px;
+    margin: 4px auto;
 }
