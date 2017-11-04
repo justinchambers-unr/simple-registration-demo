@@ -11,15 +11,26 @@ def index():
     return render_template("index-template.html")
 
 
-@app.route('/hello')
-def hello():
-    output = 'Hello World'
-    return output
+@app.route('/confirmation', methods=['GET', 'POST'])
+def confirmation():
+    data = {
+        "name": "test"
+    }
+    print("from /confirmation, data.name = " + data["name"])
+    return render_template("simple-registration-confirmation.html", data=data)
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template("simple-registration-form.html")
+    print("/register reached by " + request.method)
+    if request.method == 'POST':
+        data = request.form
+        for key in data:
+            print(data[key])
+
+        return redirect(url_for('confirmation'))
+    else:
+        return render_template("simple-registration-form.html")
 
 
 @app.route('/registration-report')
