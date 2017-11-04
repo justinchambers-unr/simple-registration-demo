@@ -5,13 +5,13 @@
 {% block content %}
     <fieldset>
         <legend>Registration Info</legend>
-        <label>First Name</label><input type="text" name="fname" value="Jane" />
-        <label>Last Name</label><input type="text" name="lname" value="Humane" />
-        <label>Address</label><input type="text" name="addr1" value="123 Sesame St" />
-        <label>Address 2</label><input type="text" name="addr2" value="Apt. 4" />
-        <label>City</label><input type="text" name="city" value="New York" />
-        <label>State</label><input type="text" name="state" value="NY" />
-        <label>Zip</label><input type="number" name="zip" value="10010" />
+        <label>First Name</label><input id="fname" type="text" name="fname" defaultValue="Jane" />
+        <label>Last Name</label><input id="lname" type="text" name="lname" defaultValue="Humane" />
+        <label>Address</label><input id=""addr1 type="text" name="addr1" defaultValue="123 Sesame St" />
+        <label>Address 2</label><input id="addr2" type="text" name="addr2" defaultValue="Apt. 4" />
+        <label>City</label><input id="city" type="text" name="city" defaultValue="New York" />
+        <label>State</label><input id="state" type="text" name="state" defaultValue="NY" />
+        <label>Zip</label><input id="zipcode" type="text" name="zipcode" defaultValue="10010" />
     </fieldset>
     <button id="submit-info">Submit</button>
     <script type="text/javascript" src="{{ url_for('static', filename='js/vendor/jquery-3.2.1.min.js') }}"></script>
