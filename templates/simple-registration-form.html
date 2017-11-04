@@ -1,0 +1,17 @@
+{%  extends "base.html" %}
+{% block title %}
+    <title>Simple Registration Web App - Form</title>
+{% endblock %}
+{% block content %}
+    <fieldset>
+        <legend>Registration Info</legend>
+        <span>First Name</span><input type="text" name="fname" value="Jane" />
+        <span>Last Name</span><input type="text" name="lname" value="Humane" />
+        <span>Address</span><input type="text" name="addr1" value="123 Sesame St" />
+        <span>Address 2</span><input type="text" name="addr2" value="Apt. 4" />
+        <span>City</span><input type="text" name="city" value="New York" />
+        <span>State</span><input type="text" name="state" value="NY" />
+        <span>Zip</span><input type="number" name="zip" value="10010" />
+    </fieldset>
+    <button id="submit-info" onclick="verifyForm()">Submit</button>
+{% endblock %}

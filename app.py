@@ -1,12 +1,14 @@
 import os
-from flask import Flask, request
+import sqlite3
+from flask import Flask, request, session, g, redirect, url_for, abort, \
+     render_template, flash
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def index():
-    return """<h1>Simple Registration Webapp</h1>"""
+    return render_template("index-template.html")
 
 
 @app.route('/hello')
@@ -17,11 +19,7 @@ def hello():
 
 @app.route('/register')
 def register():
-    form = """
-    <form id=simple-registration action="/cgi-bin/validate-form.py">
-    <label>First Name: <input type="text" name="fname"/></label>
-    </form>"""
-    return form
+    return render_template("simple-registration-form.html")
 
 
 @app.route('/registration-report')
