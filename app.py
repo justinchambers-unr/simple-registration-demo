@@ -1,12 +1,36 @@
 import os
 import json
-import sqlite3
+import http.client
+import hashlib
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import urllib.parse
+import traceback
+import pprint
+import os
 from collections import OrderedDict
 from custom_modules import verify_helper as v
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
 
 app = Flask(__name__)
+
+urllib.parse.uses_netloc.append("postgres")
+url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
+dbConn = psycopg2.connect( database=url.path[1:], user=url.username, password=url.password, host=url.hostname, port=url.port)
+dbCur = dbConn.cursor(cursor_factory=RealDictCursor)
+
+
+def get_data():
+    print("Attempting to fetch records from db...")
+    rows = []
+    try:
+        dbCur.execute("select * from userdb")
+        rows = dbCur.fetchall()
+        print("Success!")
+    except:
+        print("error during select: " + str(traceback.format_exc()))
+    return rows
 
 
 @app.route("/")
@@ -52,7 +76,9 @@ def confirmation():
 
 @app.route("/registration-report")
 def report():
-    return "stuff from DB..."
+    rows = get_data()
+    print(rows)
+    return render_template("simple-registration-report.html", rows=rows)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,33 @@
+{%  extends "base.html" %}
+{% block title %}
+    <title>Simple Registration Web App - Confirmation</title>
+{% endblock %}
+{% block content %}
+    <h3>Registration Report</h3>
+    <table>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Address1</th>
+            <th>Address2</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Zip</th>
+            <th>Country</th>
+            <th>Date</th>
+        </tr>
+        {% for row in rows %}
+        <tr>
+            <td>{{ row.fname }}</td>
+            <td>{{ row.lname }}</td>
+            <td>{{ row.addr1 }}</td>
+            <td>{{ row.addr2 }}</td>
+            <td>{{ row.city }}</td>
+            <td>{{ row.state }}</td>
+            <td>{{ row.zipcode }}</td>
+            <td>{{ row.country }}</td>
+            <td>{{ row.date }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
