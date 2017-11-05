@@ -12,9 +12,9 @@
         <label>City</label><input id="city" type="text" name="city" placeholder="ex: New York" />
         <label>State</label><input id="state" type="text" name="state" placeholder="ex: NY" />
         <label>Zip</label><input id="zipcode" type="text" name="zipcode" placeholder="ex: 10010 or 10010-1234" />
-        <label>Country</label><input id="country" type="text" name="country" value="US" disabled="disabled" />
+        <label>Country</label><input id="country" type="text" name="country" value="US" />
+        <button id="submit-info">Submit</button>
     </fieldset>
-    <button id="submit-info">Submit</button>
     <script type="text/javascript" src="{{ url_for('static', filename='js/vendor/jquery-3.2.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/src/RegistrationApp.js') }}"></script>
 {% endblock %}

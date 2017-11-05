@@ -27,6 +27,7 @@ class RegistrationApp {
         r.element = document.createElement("aside");
         r.element.id = "registration-app-result";
         document.body.appendChild(r.element);
+        $("#country").prop("disabled", true);
         r._attachEvents();
     }
     _goodState(code) {
@@ -71,17 +72,38 @@ class RegistrationApp {
               fs = $("fieldset")[0];
         r._verify(fs);
         if(r.readyToRegister) {
-            const data = $(fs).serialize();
-            try {
-                $.post("register", data, this._onSuccess(data));
-            } catch(err) {
-                console.log(err);
-            }
+            $("#country").prop("disabled", false);
+            const msg = document.createElement("p");
+            msg.innerText = "Getting server-side validation...";
+            r.element.appendChild(msg);
+            $.ajax({
+                url: "/verifying",
+                data: $(fs).serialize(),
+                type: "POST",
+                success: response => {r._onSuccess(response);},
+                error: err => { console.log(err); }
+            });
         }
     }
     _onSuccess(d) {
-        const r = this;
-        console.log("Successfully posted data = " + d);
+        $("fieldset")[0].style.display = "none";
+        $("#country").prop("disabled", true);
+        const msg = document.createElement("p");
+        const r = this,
+              data = JSON.parse(d),
+              list = document.createElement("ul");
+        msg.innerText = "Server-side validation complete. Status = " + data.status;
+        r.element.appendChild(msg);
+        for(const key in data) {
+            if(data.hasOwnProperty(key)) {
+                if(key !== "status") {
+                    const item = document.createElement("li");
+                    item.innerText = key + " : " + data[key];
+                    list.appendChild(item);
+                }
+            }
+        }
+        r.element.appendChild(list);
     }
     _verify(fs) {
         const r = this,
@@ -92,7 +114,7 @@ class RegistrationApp {
         $.each(fs.children, (i, c) => {
             if(c.nodeName === "INPUT") {
                 const item = document.createElement("li");
-                item.innerText = c.name + ":" + c.value;
+                item.innerText = c.name + " : " + c.value;
                 list.appendChild(item);
                 switch(c.id) {
                     case "state":
@@ -108,13 +130,15 @@ class RegistrationApp {
                         break;
                 }
                 if(r.readyToRegister === false) {
-                    r.element.innerHTML = "Registration info invalid.";
+                    r.element.innerHTML = "<p>Client-side validation complete. Status = Invalid data.</p>";
                     return false;
+                } else {
+                    r.element.innerHTML = "<p>Client-side validation complete. Status = Valid data.</p>";
                 }
             }
         });
         r.element.appendChild(list);
-        status.innerText = "Ready to register? " + r.readyToRegister;
+        status.innerText = "OK to send to server? " + r.readyToRegister;
         r.element.appendChild(status);
     }
 }
