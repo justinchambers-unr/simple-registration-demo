@@ -2,11 +2,12 @@ class RegistrationApp {
     constructor() {
         const r = this;
         r.element = {};
+        r.errors = 0;
         r.states = [  "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL",
                       "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE",
                       "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD",
                       "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"  ];
-        r.readyToRegister = false;
+        r.goodData = false;
         r._attachEvents = r._attachEvents.bind(r);
         r._build = r._build.bind(r);
         r._goodState = r._goodState.bind(r);
@@ -26,7 +27,7 @@ class RegistrationApp {
         const r = this;
         r.element = document.createElement("aside");
         r.element.id = "registration-app-result";
-        document.body.appendChild(r.element);
+        $("#registration-aside-container").append(r.element);
         $("#country").prop("disabled", true);
         r._attachEvents();
     }
@@ -67,31 +68,15 @@ class RegistrationApp {
         const r = this;
         return val > strict_lower && val < strict_upper;
     }
-    _submit() {
-        const r = this,
-              fs = $("fieldset")[0];
-        r._verify(fs);
-        if(r.readyToRegister) {
-            $("#country").prop("disabled", false);
-            const msg = document.createElement("p");
-            msg.innerText = "Getting server-side validation...";
-            r.element.appendChild(msg);
-            $.ajax({
-                url: "/verifying",
-                data: $(fs).serialize(),
-                type: "POST",
-                success: response => {r._onSuccess(response);},
-                error: err => { console.log(err); }
-            });
-        }
-    }
     _onSuccess(d) {
         $("fieldset")[0].style.display = "none";
         $("#country").prop("disabled", true);
-        const msg = document.createElement("p");
         const r = this,
+              msg = document.createElement("p"),
+              frm = $("#registration-form").children()[0],
               data = JSON.parse(d),
               list = document.createElement("ul");
+        $(frm).text($(frm).text() + " - Confirmation");
         msg.innerText = "Server-side validation complete. Status = " + data.status;
         r.element.appendChild(msg);
         for(const key in data) {
@@ -105,12 +90,30 @@ class RegistrationApp {
         }
         r.element.appendChild(list);
     }
+    _submit() {
+        const r = this,
+              fs = $("fieldset")[0];
+        r._verify(fs);
+        if(r.errors === 0) {
+            $("#country").prop("disabled", false);
+            const msg = document.createElement("p");
+            msg.innerText = "Getting server-side validation...";
+            r.element.appendChild(msg);
+            $.ajax({
+                url: "/verifying",
+                data: $(fs).serialize(),
+                type: "POST",
+                success: response => {r._onSuccess(response);},
+                error: err => { console.log(err); }
+            });
+        }
+    }
     _verify(fs) {
         const r = this,
               list = document.createElement("ul"),
               status = document.createElement("p");
         r.element.innerHTML = "";
-        r.readyToRegister = false;
+        r.errors = 0;
         $.each(fs.children, (i, c) => {
             if(c.nodeName === "INPUT") {
                 const item = document.createElement("li");
@@ -118,28 +121,30 @@ class RegistrationApp {
                 list.appendChild(item);
                 switch(c.id) {
                     case "state":
-                        r.readyToRegister = r._goodState(c.value);
+                        r.goodData = r._goodState(c.value);
                         break;
                     case "zipcode":
-                        r.readyToRegister = r._goodZIP(c);
+                        r.goodData = r._goodZIP(c);
                         break;
                     case "addr2":
                         break;
                     default:
-                        r.readyToRegister = r._hasText(c);
+                        r.goodData = r._hasText(c);
                         break;
                 }
-                if(r.readyToRegister === false) {
-                    r.element.innerHTML = "<p>Client-side validation complete. Status = Invalid data.</p>";
-                    return false;
-                } else {
-                    r.element.innerHTML = "<p>Client-side validation complete. Status = Valid data.</p>";
+                if(!r.goodData) {
+                    r.errors++;
+                    item.innerText += " - invalid data"
                 }
             }
         });
-        r.element.appendChild(list);
-        status.innerText = "OK to send to server? " + r.readyToRegister;
-        r.element.appendChild(status);
+        if(r.errors > 0) {
+            r.element.innerHTML = "<p>Client-side validation complete. Status = Invalid data.</p>";
+            r.element.appendChild(list);
+            return false;
+        } else {
+            r.element.innerHTML = "<p>Client-side validation complete. Status = Valid data.</p>";
+        }
     }
 }
 $(() => {

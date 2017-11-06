@@ -25,7 +25,7 @@ def get_data():
     print("Attempting to fetch records from db...")
     rows = []
     try:
-        dbCur.execute("select * from userdb")
+        dbCur.execute("select * from userdb order by date desc ")
         rows = dbCur.fetchall()
         print("Success!")
     except:
