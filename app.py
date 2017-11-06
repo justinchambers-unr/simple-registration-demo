@@ -42,7 +42,7 @@ def index():
 def verifying():
     # print("/verifying reached by " + request.method)
     data = request.form
-    v.run_verify_helper(data)
+    status = v.run_verify_helper(data)
     fname = data["fname"]
     lname = data["lname"]
     addr1 = data["addr1"]
@@ -52,7 +52,7 @@ def verifying():
     zipcode = data["zipcode"]
     country = data["country"]
     return json.dumps(OrderedDict(
-        status="OK",
+        status=status,
         fname=fname,
         lname=lname,
         addr1=addr1,
