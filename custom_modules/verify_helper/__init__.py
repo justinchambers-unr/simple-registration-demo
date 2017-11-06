@@ -1,3 +1,43 @@
+from fforms import make_from_literal, validators, bind_dotted
+
+
+schema = make_from_literal({
+    'username': validators.from_regex("^[a-zA-Z][a-zA-Z0-9_]{0,25}"),
+    'password': validators.chain(
+        validators.limit_length(min=8, max=128),
+        validators.from_regex("[a-z]",
+                              "{field.name} must contain lowercase letters"),
+        validators.from_regex("[A-Z]",
+                              "{field.name} must contain uppercase letters"),
+        validators.from_regex("[0-9]", "{field.name} must contain numbers"),
+        validators.from_regex("[^a-zA-Z0-9]",
+                              "{field.name} must contain special characters")
+    ),
+    'password2': validators.ensure_str,
+    'email': validators.email,
+    'address': {
+        'street': validators.chain(validators.ensure_str,
+                                   validators.limit_length(min=2)),
+        'street2': validators.ensure_str,
+        'zip_code': validators.chain(validators.from_regex("^[0-9]+$"),
+                                     validators.limit_length(min=5, max=5)),
+        'state': validators.one_of("ME", "NH", "VT", "MA")
+    },
+    'tags': [
+        {'name': validators.ensure_str}
+    ],
+})
+schema.validator = validators.chain(
+    schema.validator,  # The default is validators.all_children
+    validators.key_matcher("password", "password2",
+                           "Please ensure the two passwords match"))
+
+schema['tags'].validator = validators.chain(
+      schema['tags'].validator,
+      validators.limit_length(min=1, max=8)
+)
+
+
 def good_state(state_code):
     state_map = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID", "IL",
                  "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE",
