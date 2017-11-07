@@ -64,7 +64,7 @@ class RegistrationApp {
     _submit() {
         const r = this,
               fs = $("fieldset")[0];
-        //r._verify(fs);
+        r._verify(fs);
         if(r.errors === 0) {
             $("#country").prop("disabled", false);
             const msg = document.createElement("p");
