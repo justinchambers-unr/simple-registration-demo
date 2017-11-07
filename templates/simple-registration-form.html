@@ -6,16 +6,17 @@
     <div id="registration-form" class="container">
         <h2>Registration Form</h2>
         <fieldset class="form-signin">
-            <label>First Name</label><input id="fname" class="form-control" type="text" name="fname" placeholder="ex: Jane" /><br>
-            <label>Last Name</label><input id="lname" class="form-control" type="text" name="lname" placeholder="ex: Humane" /><br>
-            <label>Address</label><input id="addr1" class="form-control" type="text" name="addr1" placeholder="ex: 123 Sesame St" /><br>
+            <label>First Name*</label><input id="fname" class="form-control" type="text" name="fname" placeholder="ex: Jane" /><br>
+            <label>Last Name*</label><input id="lname" class="form-control" type="text" name="lname" placeholder="ex: Humane" /><br>
+            <label>Address*</label><input id="addr1" class="form-control" type="text" name="addr1" placeholder="ex: 123 Sesame St" /><br>
             <label>Address 2</label><input id="addr2" class="form-control" type="text" name="addr2" placeholder="ex: Apt. 4" /><br>
-            <label>City</label><input id="city" class="form-control" type="text" name="city" placeholder="ex: New York" /><br>
-            <label>State</label><input id="state" class="form-control" type="text" name="state" placeholder="ex: NY" /><br>
-            <label>Zip</label><input id="zipcode" class="form-control" type="text" name="zipcode" placeholder="ex: 10010 or 10010-1234" /><br>
-            <label>Country</label><input id="country" class="form-control" type="text" name="country" value="US" /><br>
+            <label>City*</label><input id="city" class="form-control" type="text" name="city" placeholder="ex: New York" /><br>
+            <label>State*</label><input id="state" class="form-control" type="text" name="state" placeholder="ex: NY" /><br>
+            <label>Zip*</label><input id="zipcode" class="form-control" type="text" name="zipcode" placeholder="ex: 10010 or 10010-1234" /><br>
+            <label>Country*</label><input id="country" class="form-control" type="text" name="country" value="US" /><br>
             <button id="submit-info" class="btn btn-lg btn-primary btn-block">Submit</button>
         </fieldset>
+        <p>* = Field is required.</p>
     </div>
     <div id="registration-aside-container" class="container"></div>
     <script type="text/javascript" src="{{ url_for('static', filename='js/vendor/jquery-3.2.1.min.js') }}"></script>

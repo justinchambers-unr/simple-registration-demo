@@ -8,13 +8,13 @@ class RegistrationApp {
                       "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD",
                       "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"  ];
         r.goodData = false;
+        r.name_schema = /^[A-Z]([a-zA-Z.][-]?){0,24}$/;
+        r.addr_schema = /^[A-Z0-9][a-zA-Z0-9\s.]{0,49}$/;
+        r.addr2_schema = /^([A-Z0-9][a-zA-Z0-9?\s.]?){0,49}$/;
+        r.zip_schema = /^[0-9]{5}([-][0-9]{4})?$/;
         r._attachEvents = r._attachEvents.bind(r);
         r._build = r._build.bind(r);
         r._goodState = r._goodState.bind(r);
-        r._goodZIP = r._goodZIP.bind(r);
-        r._hasText = r._hasText.bind(r);
-        r._isInt = r._isInt.bind(r);
-        r._isIntInRange = r._isIntInRange.bind(r);
         r._submit = r._submit.bind(r);
         r._verify = r._verify.bind(r);
         r._build();
@@ -34,39 +34,6 @@ class RegistrationApp {
     _goodState(code) {
         const r = this;
         return r.states.find( state => { return state === code; } ) !== undefined;
-    }
-    _goodZIP(field) {
-        const r = this;
-        if(field.value.length === 5 || field.value.length === 10) {
-            const firstPart = field.value.substring(0,5);
-            let dash = "",
-                lastPart = "";
-            let goodZIP = r._isInt(firstPart) && r._isIntInRange(firstPart, 9999, 100000);
-            if(goodZIP && field.value.length === 10) {
-                dash = field.value[5];
-                lastPart = field.value.substring(6);
-                goodZIP = (dash === "-") && r._isInt(lastPart) && r._isIntInRange(lastPart, 999, 10000);
-            }
-            return goodZIP;
-        } else {
-            return false;
-        }
-
-    }
-    _hasText(field) {
-        const r = this;
-        console.log("Has text? " + !(field.value === ""));
-        return !(field.value === "");
-    }
-    _isInt(val) {
-        const r = this;
-        const num = !(isNaN(val));
-        const integ = (val % 1 === 0);
-        return !(isNaN(val)) && (val % 1 === 0);
-    }
-    _isIntInRange(val, strict_lower, strict_upper) {
-        const r = this;
-        return val > strict_lower && val < strict_upper;
     }
     _onSuccess(d) {
         $("fieldset")[0].style.display = "none";
@@ -89,11 +56,12 @@ class RegistrationApp {
             }
         }
         r.element.appendChild(list);
+        window.open("/confirmation", "_self");
     }
     _submit() {
         const r = this,
               fs = $("fieldset")[0];
-        //r._verify(fs);
+        r._verify(fs);
         if(r.errors === 0) {
             $("#country").prop("disabled", false);
             const msg = document.createElement("p");
@@ -109,41 +77,45 @@ class RegistrationApp {
         }
     }
     _verify(fs) {
-        const r = this,
-              list = document.createElement("ul"),
-              status = document.createElement("p");
+        const r = this;
         r.element.innerHTML = "";
         r.errors = 0;
         $.each(fs.children, (i, c) => {
             if(c.nodeName === "INPUT") {
-                const item = document.createElement("li");
-                item.innerText = c.name + " : " + c.value;
-                list.appendChild(item);
+                c.style.backgroundColor = "#ffffff";
                 switch(c.id) {
                     case "state":
                         r.goodData = r._goodState(c.value);
                         break;
                     case "zipcode":
-                        r.goodData = r._goodZIP(c);
+                        r.goodData = r.zip_schema.test(c.value);
+                        break;
+                    case "addr1":
+                        r.goodData = r.addr_schema.test(c.value);
                         break;
                     case "addr2":
+                        r.goodData = r.addr2_schema.test(c.value);
+                        break;
+                    case "country":
+                        r.goodData = () => { return c.value === "US"; };
                         break;
                     default:
-                        r.goodData = r._hasText(c);
+                        r.goodData = r.name_schema.test(c.value);
                         break;
                 }
                 if(!r.goodData) {
                     r.errors++;
-                    item.innerText += " - invalid data"
+                    const msg = " - invalid data";
+                    c.style.backgroundColor = "#f2dede";
+                    c.value += msg;
+                } else {
+                    c.style.backgroundColor = "#dff0d8";
                 }
             }
         });
         if(r.errors > 0) {
             r.element.innerHTML = "<p>Client-side validation complete. Status = Invalid data.</p>";
-            r.element.appendChild(list);
             return false;
-        } else {
-            r.element.innerHTML = "<p>Client-side validation complete. Status = Valid data.</p>";
         }
     }
 }
@@ -160,11 +132,3 @@ $(() => {
     $("#zipcode").attr("value", "89509");
     */
 });
-
-/*
-name_schema = re.compile("^[A-Z][a-zA-Z?]{0,24}")
-addr_schema = re.compile("^[a-zA-Z0-9\s.]{0,50}$")
-addr2_schema = re.compile("^[a-zA-Z0-9?\s.?]{0,50}$")
-zip_schema = re.compile("[0-9]{5}([-][0-9]{4})?$")
-errors = []
- */

@@ -1,8 +1,8 @@
 import re
 
 name_schema = re.compile("^[A-Z]([a-zA-Z.][-]?){0,24}$")
-addr_schema = re.compile("^[a-zA-Z0-9\s.]{0,50}$")
-addr2_schema = re.compile("^[a-zA-Z0-9?\s.?]{0,50}$")
+addr_schema = re.compile("^[A-Z0-9][a-zA-Z0-9\s.]{0,49}$")
+addr2_schema = re.compile("^([A-Z0-9][a-zA-Z0-9?\s.]?){0,49}$")
 zip_schema = re.compile("^[0-9]{5}([-][0-9]{4})?$")
 errors = []
 
