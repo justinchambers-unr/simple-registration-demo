@@ -129,10 +129,12 @@ $(() => {
     "use strict";
     const app = new RegistrationApp();
     // data for testing...
+    /*
     $("#fname").attr("value", "Don");
     $("#lname").attr("value", "Quixote");
     $("#addr1").attr("value", "One Castle Ln");
     $("#city").attr("value", "San Francisco");
     $("#state").attr("value", "CA");
     $("#zipcode").attr("value", "94016-0000");
+    */
 });
