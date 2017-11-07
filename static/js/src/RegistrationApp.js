@@ -150,11 +150,21 @@ class RegistrationApp {
 $(() => {
     "use strict";
     const app = new RegistrationApp();
-    // for testing...
+    // data for testing...
+    /*
     $("#fname").attr("value", "J");
     $("#lname").attr("value", "Cham");
     $("#addr1").attr("value", "123 4th St");
     $("#city").attr("value", "Reno");
     $("#state").attr("value", "NV");
     $("#zipcode").attr("value", "89509");
+    */
 });
+
+/*
+name_schema = re.compile("^[A-Z][a-zA-Z?]{0,24}")
+addr_schema = re.compile("^[a-zA-Z0-9\s.]{0,50}$")
+addr2_schema = re.compile("^[a-zA-Z0-9?\s.?]{0,50}$")
+zip_schema = re.compile("[0-9]{5}([-][0-9]{4})?$")
+errors = []
+ */
