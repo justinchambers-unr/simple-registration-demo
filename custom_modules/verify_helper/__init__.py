@@ -1,7 +1,8 @@
 import re
 
-name_schema = re.compile("^[A-Z]([a-zA-Z.][-]?){0,24}$")
-addr_schema = re.compile("^[A-Z0-9][a-zA-Z0-9\s.]{0,49}$")
+name_schema = re.compile("^[A-Z]([a-zA-Z][-]?){0,23}([a-z]?)$")
+name2_schema = re.compile("^[A-Z][a-zA-Z .\-?]{0,48}[a-z?]$")
+addr_schema = re.compile("^[A-Z0-9][a-zA-Z0-9 .]{0,49}$")
 addr2_schema = re.compile("^([A-Z0-9][a-zA-Z0-9?\s.]?){0,49}$")
 zip_schema = re.compile("^[0-9]{5}([-][0-9]{4})?$")
 errors = []
@@ -37,7 +38,7 @@ def run_verify_helper(data):
     match_string_to_schema(name_schema, data["lname"])
     match_string_to_schema(addr_schema, data["addr1"])
     match_string_to_schema(addr2_schema, data["addr2"])
-    match_string_to_schema(name_schema, data["city"])
+    match_string_to_schema(name2_schema, data["city"])
     match_state(data["state"])
     match_string_to_schema(zip_schema, data["zipcode"])
     match_country(data["country"])

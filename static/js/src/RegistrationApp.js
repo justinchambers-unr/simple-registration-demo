@@ -9,6 +9,7 @@ class RegistrationApp {
                       "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"  ];
         r.goodData = false;
         r.name_schema = /^[A-Z]([a-zA-Z.][-]?){0,24}$/;
+        r.name2_schema = /[A-Z][a-zA-Z .\-?]{0,49}$/;
         r.addr_schema = /^[A-Z0-9][a-zA-Z0-9\s.]{0,49}$/;
         r.addr2_schema = /^([A-Z0-9][a-zA-Z0-9?\s.]?){0,49}$/;
         r.zip_schema = /^[0-9]{5}([-][0-9]{4})?$/;
@@ -56,12 +57,14 @@ class RegistrationApp {
             }
         }
         r.element.appendChild(list);
-        window.open("/confirmation", "_self");
+        if($(list).find("li").length === 0) {
+            window.open("/confirmation", "_self");
+        }
     }
     _submit() {
         const r = this,
               fs = $("fieldset")[0];
-        r._verify(fs);
+        //r._verify(fs);
         if(r.errors === 0) {
             $("#country").prop("disabled", false);
             const msg = document.createElement("p");
@@ -84,6 +87,9 @@ class RegistrationApp {
             if(c.nodeName === "INPUT") {
                 c.style.backgroundColor = "#ffffff";
                 switch(c.id) {
+                    case "city":
+                        r.goodData = r.name2_schema.test(c.value);
+                        break;
                     case "state":
                         r.goodData = r._goodState(c.value);
                         break;
@@ -123,12 +129,10 @@ $(() => {
     "use strict";
     const app = new RegistrationApp();
     // data for testing...
-    /*
-    $("#fname").attr("value", "J");
-    $("#lname").attr("value", "Cham");
-    $("#addr1").attr("value", "123 4th St");
-    $("#city").attr("value", "Reno");
-    $("#state").attr("value", "NV");
-    $("#zipcode").attr("value", "89509");
-    */
+    $("#fname").attr("value", "Don");
+    $("#lname").attr("value", "Quixote");
+    $("#addr1").attr("value", "One Castle Ln");
+    $("#city").attr("value", "San Francisco");
+    $("#state").attr("value", "CA");
+    $("#zipcode").attr("value", "94016-0000");
 });
