@@ -25,7 +25,7 @@ def get_data():
     print("Attempting to fetch records from db...")
     rows = []
     try:
-        dbCur.execute("select * from userdb order by date desc ")
+        dbCur.execute("select * from userdb order by date desc")
         rows = dbCur.fetchall()
         print("Success!")
     except:
@@ -42,26 +42,43 @@ def index():
 def verifying():
     # print("/verifying reached by " + request.method)
     data = request.form
-    status = v.run_verify_helper(data)
-    fname = data["fname"]
-    lname = data["lname"]
-    addr1 = data["addr1"]
-    addr2 = data["addr2"]
-    city = data["city"]
-    state = data["state"]
-    zipcode = data["zipcode"]
-    country = data["country"]
-    return json.dumps(OrderedDict(
-        status=status,
-        fname=fname,
-        lname=lname,
-        addr1=addr1,
-        addr2=addr2,
-        city=city,
-        state=state,
-        zipcode=zipcode,
-        country=country
-    ))
+    form_errors = v.run_verify_helper(data)
+    if len(form_errors) > 0:
+        return json.dumps(OrderedDict(
+            status="Invalid",
+            errors=form_errors
+        ))
+    else:
+        br = "', '"
+        fname = data["fname"]
+        lname = data["lname"]
+        addr1 = data["addr1"]
+        addr2 = data["addr2"]
+        city = data["city"]
+        state = data["state"]
+        zipcode = data["zipcode"]
+        country = data["country"]
+        insert_values = "DEFAULT, '" + fname + br + lname + br + addr1 + br + addr2 \
+                        + br + city + br + state + br + zipcode + br+ country + "', " \
+                        + "DEFAULT"
+        try:
+            dbCur.execute("insert into userdb values(" + insert_values + ")")
+            return json.dumps(OrderedDict(
+                status="OK",
+                fname=fname,
+                lname=lname,
+                addr1=addr1,
+                addr2=addr2,
+                city=city,
+                state=state,
+                zipcode=zipcode,
+                country=country
+            ))
+        except:
+            print("error during insert: " + str(traceback.format_exc()))
+            return json.dumps(OrderedDict(
+                status="InsertFailed"
+            ))
 
 
 @app.route("/register")
