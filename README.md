@@ -4,8 +4,8 @@
 This project is a basic example of client-side and server-side form handling.
 
 Some stack details:
-- Database: PostgreSQL via Heroku
-- Server: Python via Flask
+- Database: PostgreSQL managed by Heroku
+- Server: Python via Flask and deployed on Heroku
 - Client-side web app: ES6 Javascript with JQuery
 - CSS: Bootstrap 4
 
