@@ -13,6 +13,16 @@ class RegistrationApp {
         r.addr_schema = /^[A-Z0-9][a-zA-Z0-9\s.]{0,49}$/;
         r.addr2_schema = /^([A-Z0-9][a-zA-Z0-9?\s.]?){0,49}$/;
         r.zip_schema = /^[0-9]{5}([-][0-9]{4})?$/;
+        r.label_map = {
+            "fname" : "First Name",
+            "lname" : "Last Name",
+            "addr1" : "Address 1",
+            "addr2" : "Address 2",
+            "city" : "City",
+            "state" : "State",
+            "zipcode" : "Zip",
+            "country" : "Country"
+        };
         r._attachEvents = r._attachEvents.bind(r);
         r._build = r._build.bind(r);
         r._goodState = r._goodState.bind(r);
@@ -37,29 +47,32 @@ class RegistrationApp {
         return r.states.find( state => { return state === code; } ) !== undefined;
     }
     _onSuccess(d) {
-        $("fieldset")[0].style.display = "none";
-        $("#country").prop("disabled", true);
         const r = this,
-              msg = document.createElement("p"),
+              cntry = $("#country"),
+              status = document.createElement("p"),
+              hint = document.createElement("p"),
               frm = $("#registration-form").children()[0],
               data = JSON.parse(d),
               list = document.createElement("ul");
+        $(":input").prop("value", "");
+        $("fieldset")[0].style.display = "none";
+        cntry.prop("value", "US");
+        cntry.prop("disabled", true);
         $(frm).text($(frm).text() + " - Confirmation");
-        msg.innerText = "Server-side validation complete. Status = " + data.status;
-        r.element.appendChild(msg);
+        status.innerText = "Server-side validation complete. Status = " + data.status;
+        hint.innerText = "Refresh this page to enter another record.";
+        r.element.appendChild(status);
         for(const key in data) {
             if(data.hasOwnProperty(key)) {
                 if(key !== "status") {
                     const item = document.createElement("li");
-                    item.innerText = key + " : " + data[key];
+                    item.innerText = r.label_map[key] + " : " + data[key];
                     list.appendChild(item);
                 }
             }
         }
         r.element.appendChild(list);
-        if($(list).find("li").length === 0) {
-            window.open("/confirmation", "_self");
-        }
+        r.element.appendChild(hint);
     }
     _submit() {
         const r = this,
@@ -129,12 +142,12 @@ $(() => {
     "use strict";
     const app = new RegistrationApp();
     // data for testing...
-    /*
+
     $("#fname").attr("value", "Don");
     $("#lname").attr("value", "Quixote");
     $("#addr1").attr("value", "One Castle Ln");
     $("#city").attr("value", "San Francisco");
     $("#state").attr("value", "CA");
     $("#zipcode").attr("value", "94016-0000");
-    */
+
 });

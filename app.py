@@ -37,7 +37,6 @@ def index():
 
 @app.route("/verifying", methods=["POST"])
 def verifying():
-    # print("/verifying reached by " + request.method)
     data = request.form
     form_errors = v.run_verify_helper(data)
     if len(form_errors) > 0:
@@ -81,11 +80,6 @@ def verifying():
 @app.route("/register")
 def register():
     return render_template("simple-registration-form.html")
-
-
-@app.route("/confirmation")
-def confirmation():
-    return render_template("simple-registration-confirmation.html")
 
 
 @app.route("/registration-report")

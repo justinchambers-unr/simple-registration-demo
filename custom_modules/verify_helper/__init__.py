@@ -10,7 +10,7 @@ errors = []
 
 def match_string_to_schema(regex, str):
     res = regex.match(str)
-    print(res)
+    # print(res)
     if not res:
         errors.append(str)
 
