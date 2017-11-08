@@ -8,10 +8,10 @@ class RegistrationApp {
                       "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD",
                       "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"  ];
         r.goodData = false;
-        r.name_schema = /^[A-Z]([a-zA-Z.][-]?){0,24}$/;
-        r.name2_schema = /[A-Z][a-zA-Z .\-?]{0,49}$/;
-        r.addr_schema = /^[A-Z0-9][a-zA-Z0-9\s.]{0,49}$/;
-        r.addr2_schema = /^([A-Z0-9][a-zA-Z0-9?\s.]?){0,49}$/;
+        r.name_schema = /^[A-Z][a-zA-Z .-]{0,23}[a-z?]$/;
+        r.name2_schema = /^[A-Z][a-zA-Z .-]{0,48}[a-z]$/;
+        r.addr_schema = /^[A-Z0-9][a-zA-Z0-9 .-]{4,48}[a-zA-Z0-9 .]$/;
+        r.addr2_schema = /^[A-Z0-9]?[a-zA-Z0-9 .]{0,48}[a-z0-9]?$/;
         r.zip_schema = /^[0-9]{5}([-][0-9]{4})?$/;
         r.label_map = {
             "fname" : "First Name",
